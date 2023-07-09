@@ -1,7 +1,6 @@
 {
-  "exec": "ts-node src/main.ts",
+  "exec": "src/main.js",
   "watch": [
-    "src/**/*.ts"
-  ],
-  "ext": "ts"
+    "src/**/*.js"
+  ]
 }
