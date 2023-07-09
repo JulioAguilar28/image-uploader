@@ -10,14 +10,15 @@ const login = async (req, res) => {
   }
 }
 
-const signup = async (req, res) => {
-  try {
-    const user = await Users.create(req.body)
-    res.json(user)
-  } catch (error) {
-    console.log(error)
-    res.json(error)
-  }
+const signup = (req, res) => {
+  Users.create(req.body)
+    .then((user) => {
+      res.json(user)
+    })
+    .catch((error) => {
+      console.log(error)
+      res.json(error)
+    })
 }
 
 module.exports = {
