@@ -1,7 +1,7 @@
 const { Users } = require('../db/models/index.js')
 const AuthService = require('./service.js')
 const AuthView = require('./view.js')
-const { AuthError, AuthFieldError } = require('./errors.js')
+const { AuthError, AuthFieldError, NewUserFieldsError } = require('./errors.js')
 
 const login = async (req, res) => {
   try {
@@ -12,19 +12,19 @@ const login = async (req, res) => {
       return AuthView.loginErrorView(res, { error: error.message })
     }
 
-    AuthView.loginErrorView(res, error)
+    AuthView.unexpectedErrorView(res, error)
   }
 }
 
-const signup = (req, res) => {
-  Users.create(req.body)
-    .then((user) => {
-      res.json(user)
-    })
-    .catch((error) => {
-      console.log(error)
-      res.json(error)
-    })
+const signup = async (req, res) => {
+  try {
+    const user = await AuthService.signup(req.body)
+    AuthView.signupView(res, user)
+  } catch (error) {
+    if (error instanceof NewUserFieldsError) return AuthView.signupErrorView(res, error)
+
+    AuthView.unexpectedErrorView(res, error)
+  }
 }
 
 module.exports = {

@@ -1,5 +1,6 @@
 const { Users } = require('../db/models/index.js')
-const { AuthError } = require('./errors.js')
+const { AuthError, NewUserFieldsError } = require('./errors.js')
+const { ValidationError } = require('sequelize')
 
 const login = async (email, password) => {
   try {
@@ -17,6 +18,25 @@ const login = async (email, password) => {
   }
 }
 
+const signup = async ({ firstName, lastName, email, password }) => {
+  try {
+    return await Users.create({
+      firstName,
+      lastName,
+      email,
+      password
+    })
+  } catch (error) {
+    console.error(`AuthService sigup() | ${error}`)
+
+    if (error instanceof ValidationError)
+      throw NewUserFieldsError.of('The following fields are incorrect', error.errors, 422)
+
+    throw error
+  }
+}
+
 module.exports = {
-  login
+  login,
+  signup
 }
