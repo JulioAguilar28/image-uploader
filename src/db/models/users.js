@@ -2,6 +2,7 @@
 
 const { Model } = require('sequelize')
 const bcrypt = require('bcrypt')
+const { AuthError, AuthFieldError } = require('../../auth/errors')
 
 module.exports = (sequelize, DataTypes) => {
   class Users extends Model {
@@ -16,16 +17,18 @@ module.exports = (sequelize, DataTypes) => {
 
     static async login({ email, password }) {
       try {
+        if (!email || !password) throw AuthFieldError.of()
+
         const user = await this.findOne({
           where: { email }
         })
 
         if (user) {
-          return await user.validatePassword(password)
-        } else false
+          return (await user.validatePassword(password)) ? user : null
+        } else null
       } catch (error) {
-        console.error(`login() | error: ${error}`)
-        throw new Error(error)
+        console.error(`Users.login() | ${error}`)
+        throw error
       }
     }
 
@@ -33,8 +36,8 @@ module.exports = (sequelize, DataTypes) => {
       try {
         return await bcrypt.compare(password, this.passwordHash)
       } catch (error) {
-        console.error(`Users.validateError() | error: ${error}`)
-        throw new Error(error)
+        console.error(`Users.validatePassword() | ${error}`)
+        throw AuthFieldError.of()
       }
     }
   }
@@ -43,19 +46,57 @@ module.exports = (sequelize, DataTypes) => {
     {
       firstName: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: createNotNullMsg('firstName')
+          },
+          notEmpty: {
+            msg: createNotNullMsg('firstName')
+          }
+        }
       },
       lastName: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: createNotNullMsg('lastName')
+          },
+          notEmpty: {
+            msg: createNotNullMsg('lastName')
+          }
+        }
       },
       email: {
         allowNull: false,
         unique: true,
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        validate: {
+          notNull: {
+            msg: createNotNullMsg('email')
+          },
+          notEmpty: {
+            msg: createNotNullMsg('email')
+          },
+          isEmail: {
+            msg: 'The given email is not valid'
+          }
+        }
       },
       passwordHash: DataTypes.STRING,
-      password: DataTypes.VIRTUAL
+      password: {
+        type: DataTypes.VIRTUAL,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: createNotNullMsg('password')
+          },
+          notEmpty: {
+            msg: createNotNullMsg('password')
+          }
+        }
+      }
     },
     {
       sequelize,
@@ -68,10 +109,12 @@ module.exports = (sequelize, DataTypes) => {
       const hash = await bcrypt.hash(model.password, 10)
       model.passwordHash = hash
     } catch (error) {
-      console.log(`Users.beforeCreate() | error: ${error}`)
+      console.log(`Users.beforeCreate() | ${error}`)
       throw new Error(error)
     }
   })
 
   return Users
 }
+
+const createNotNullMsg = (field) => `${field} cannot be null or empty`

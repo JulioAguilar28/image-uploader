@@ -1,12 +1,18 @@
 const { Users } = require('../db/models/index.js')
+const AuthService = require('./service.js')
+const AuthView = require('./view.js')
+const { AuthError, AuthFieldError } = require('./errors.js')
 
 const login = async (req, res) => {
   try {
-    const valid = await Users.login(req.body)
-    if (valid) res.json({ message: 'login successfully' })
-    else res.json({ message: 'Email or password incorrect' })
+    const user = await AuthService.login(req.body)
+    AuthView.loginView(res, user)
   } catch (error) {
-    res.json(error)
+    if (error instanceof AuthError || error instanceof AuthFieldError) {
+      return AuthView.loginErrorView(res, { error: error.message })
+    }
+
+    AuthView.loginErrorView(res, error)
   }
 }
 
