@@ -2,6 +2,12 @@ const loginView = (res, user) => {
   res.status(200).json(getLoginResponse(user))
 }
 
+const authErrorView = (res, error) => {
+  res.status(422).json({
+    message: error.message
+  })
+}
+
 const getUserResponse = (user) => ({
   id: user.id,
   firstName: user.firstName,
@@ -39,6 +45,7 @@ const parseErrorField = (field) => ({
 
 module.exports = {
   loginView,
+  authErrorView,
   unexpectedErrorView,
   signupView,
   signupErrorView

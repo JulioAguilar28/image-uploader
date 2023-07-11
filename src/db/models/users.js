@@ -2,7 +2,7 @@
 
 const { Model } = require('sequelize')
 const bcrypt = require('bcrypt')
-const { AuthError, AuthFieldError } = require('../../auth/errors')
+const { AuthError } = require('../../auth/errors')
 
 module.exports = (sequelize, DataTypes) => {
   class Users extends Model {
@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
 
     static async login({ email, password }) {
       try {
-        if (!email || !password) throw AuthFieldError.of()
+        if (!email || !password) throw AuthError.of('email and password are required')
 
         const user = await this.findOne({
           where: { email }
@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
         return await bcrypt.compare(password, this.passwordHash)
       } catch (error) {
         console.error(`Users.validatePassword() | ${error}`)
-        throw AuthFieldError.of()
+        throw AuthFieldError.of('email and password are required')
       }
     }
   }

@@ -5,19 +5,7 @@ class AuthError extends Error {
     this.code = code
   }
 
-  static of(message = 'email or password are incorrect', code = 422) {
-    return new AuthError(message, code)
-  }
-}
-
-class AuthFieldError extends Error {
-  constructor(message, code) {
-    super(message)
-    this.message = message
-    this.code = code
-  }
-
-  static of(message = 'email and password field are required', code = 422) {
+  static of(message, code = 422) {
     return new AuthError(message, code)
   }
 }
@@ -41,6 +29,5 @@ class NewUserFieldsError extends Error {
 
 module.exports = {
   AuthError,
-  AuthFieldError,
   NewUserFieldsError
 }

@@ -14,7 +14,7 @@ const login = async (email, password) => {
       return user
     }
 
-    throw AuthError.of()
+    throw AuthError.of('email or password are incorrect')
   } catch (error) {
     console.error(`AuthService login() | ${error}`)
     throw error
