@@ -3,7 +3,7 @@ const loginView = (res, user) => {
 }
 
 const authErrorView = (res, error) => {
-  res.status(422).json({
+  res.status(error.code || 422).json({
     message: error.message
   })
 }
