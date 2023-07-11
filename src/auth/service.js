@@ -1,13 +1,16 @@
 const { Users } = require('../db/models/index.js')
 const { AuthError, NewUserFieldsError } = require('./errors.js')
 const { ValidationError } = require('sequelize')
+const jwt = require('jsonwebtoken')
 
 const login = async (email, password) => {
   try {
     const user = await Users.login(email, password)
 
     if (user) {
-      // sign a JWT and add the token to the user
+      const token = jwt.sign({ id: user.id }, process.env.TOKEN_KEY)
+      user.token = token
+
       return user
     }
 

@@ -1,4 +1,3 @@
-const { Users } = require('../db/models/index.js')
 const AuthService = require('./service.js')
 const AuthView = require('./view.js')
 const { AuthError, AuthFieldError, NewUserFieldsError } = require('./errors.js')

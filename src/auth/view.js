@@ -11,7 +11,7 @@ const getUserResponse = (user) => ({
 
 const getLoginResponse = (user) => ({
   ...getUserResponse(user),
-  token: 'SomeToken'
+  token: user.token
 })
 
 const signupView = (res, user) => {
