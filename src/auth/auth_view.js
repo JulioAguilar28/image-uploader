@@ -1,3 +1,5 @@
+const { parseErrorField } = require('../utils/parse_errors')
+
 const loginView = (res, user) => {
   res.status(200).json(getLoginResponse(user))
 }
@@ -36,12 +38,6 @@ const signupErrorView = (res, error) => {
     fields: errors
   })
 }
-
-const parseErrorField = (field) => ({
-  field: field.path,
-  currentValue: field.value,
-  message: field.message
-})
 
 module.exports = {
   loginView,
