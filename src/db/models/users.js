@@ -2,7 +2,7 @@
 
 const { Model } = require('sequelize')
 const bcrypt = require('bcrypt')
-const { AuthError } = require('../../auth/errors')
+const { AuthError } = require('../../auth/auth_errors')
 
 module.exports = (sequelize, DataTypes) => {
   class Users extends Model {

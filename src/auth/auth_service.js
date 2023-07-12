@@ -1,5 +1,5 @@
 const { Users } = require('../db/models/index.js')
-const { AuthError, NewUserFieldsError } = require('./errors.js')
+const { AuthError, NewUserFieldsError } = require('./auth_errors.js')
 const { ValidationError } = require('sequelize')
 const jwt = require('jsonwebtoken')
 

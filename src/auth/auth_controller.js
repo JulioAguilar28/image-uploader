@@ -1,6 +1,6 @@
-const AuthService = require('./service.js')
-const AuthView = require('./view.js')
-const { AuthError, NewUserFieldsError } = require('./errors.js')
+const AuthService = require('./auth_service.js')
+const AuthView = require('./auth_view.js')
+const { AuthError, NewUserFieldsError } = require('./auth_errors.js')
 
 const login = async (req, res) => {
   try {
