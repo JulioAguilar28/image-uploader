@@ -1,5 +1,5 @@
-const { AuthError } = require('../auth/errors')
-const AuthView = require('../auth/view')
+const { AuthError } = require('../auth/auth_errors')
+const AuthView = require('../auth/auth_view')
 const jwt = require('jsonwebtoken')
 
 const isLoggedIn = (req, res, next) => {
