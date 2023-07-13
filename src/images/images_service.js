@@ -32,6 +32,18 @@ const getImagesByUserId = async (userId) => {
   }
 }
 
+const getImageById = async (id) => {
+  try {
+    return await Images.findOne({
+      where: { id }
+    })
+  } catch (error) {
+    console.error(`Images Services getImageById() | ${error}`)
+
+    throw error
+  }
+}
+
 const createImage = async (imageFile, userId) => {
   try {
     if (!imageFile) throw ImageInvalidFormatError.of('Invalid image format', 422)
@@ -57,6 +69,7 @@ const createImage = async (imageFile, userId) => {
 
 module.exports = {
   createImage,
+  getImageById,
   getImagesByUserId,
   existsImageDir,
   createUserImageDir

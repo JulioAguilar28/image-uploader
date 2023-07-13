@@ -7,4 +7,6 @@ imagesRouter.use(AuthMiddleware)
 imagesRouter.route('').get(ImagesController.getAll)
 imagesRouter.route('').post(ImagesController.upload, ImagesController.create)
 
+imagesRouter.route('/:id').get(ImagesController.get)
+
 module.exports = imagesRouter

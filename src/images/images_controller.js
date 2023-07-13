@@ -1,6 +1,6 @@
 const multer = require('multer')
 const path = require('path')
-const ImageService = require('./images_service')
+const ImagesService = require('./images_service')
 const ImageView = require('./images_view')
 const { ImageFieldsError, ImageInvalidFormatError } = require('./images_errors')
 
@@ -28,8 +28,17 @@ const upload = multer({
 
 const getAll = async (req, res) => {
   try {
-    const images = await ImageService.getImagesByUserId(req.currentUser)
+    const images = await ImagesService.getImagesByUserId(req.currentUser)
     ImageView.allImagesView(res, images)
+  } catch (error) {
+    res.json(error)
+  }
+}
+
+const get = async (req, res) => {
+  try {
+    const image = await ImagesService.getImageById(req.params.id)
+    ImageView.get(res, image)
   } catch (error) {
     res.json(error)
   }
@@ -37,7 +46,7 @@ const getAll = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    const image = await ImageService.createImage(req.file, req.currentUser)
+    const image = await ImagesService.createImage(req.file, req.currentUser)
     ImageView.create(res, image)
   } catch (error) {
     console.error(`create error: ${error}`)
@@ -52,5 +61,6 @@ const create = async (req, res) => {
 module.exports = {
   create,
   getAll,
-  upload
+  upload,
+  get
 }

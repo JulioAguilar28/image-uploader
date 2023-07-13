@@ -17,6 +17,12 @@ const allImagesView = (res, images) => {
   })
 }
 
+const getImageView = (res, image) => {
+  res.status(200).json({
+    image: parseImageResponse(image)
+  })
+}
+
 const errorView = (res, error) => {
   res.status(error.code || 500).json({
     message: error.message
@@ -34,6 +40,7 @@ const fieldsError = (res, error) => {
 
 module.exports = {
   create: createView,
+  get: getImageView,
   allImagesView,
   fieldsError,
   errorView
