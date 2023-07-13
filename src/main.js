@@ -15,10 +15,6 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/api/v1', AuthRouter)
 app.use('/api/v1/images', ImagesRouter)
 
-app.get('/', (req, res) => {
-  res.send('Hello world!')
-})
-
 app.listen(port, () => {
   console.log(`listening on port ${port}`)
 })
