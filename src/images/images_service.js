@@ -1,6 +1,6 @@
 const { Images } = require('../db/models/index')
 const { ValidationError } = require('sequelize')
-const { ImageFieldsError, ImageInvalidFormatError } = require('./images_errors')
+const { ImageFieldsError, ImageInvalidFormatError, ImageNotFoundError } = require('./images_errors')
 const fs = require('fs/promises')
 const path = require('path')
 
@@ -30,10 +30,19 @@ const removeImageFromDisk = async (filename, userId) => {
   }
 }
 
-const getImageByIdRequest = async (id) =>
-  await Images.findOne({
-    where: { id }
-  })
+const getImageByIdRequest = async (id) => {
+  try {
+    const image = await Images.findOne({
+      where: { id }
+    })
+
+    if (!image) throw ImageNotFoundError.of(`Image with ${id} id not found`)
+
+    return image
+  } catch (error) {
+    throw error
+  }
+}
 
 const getImagesByUserId = async (userId) => {
   try {
@@ -82,7 +91,6 @@ const createImage = async (imageFile, userId) => {
 const deleteImage = async (id, userId) => {
   try {
     const image = await getImageByIdRequest(id)
-
     await removeImageFromDisk(`${image.name}.${image.extension}`, userId)
     await image.destroy()
   } catch (error) {

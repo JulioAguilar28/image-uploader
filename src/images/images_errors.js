@@ -15,11 +15,26 @@ class ImageFieldsError extends Error {
   }
 }
 
+class ImageNotFoundError extends Error {
+  message
+  code
+
+  constructor(message, code) {
+    super(message)
+    this.message = message
+    this.code = code
+  }
+
+  static of(message, code = 404) {
+    return new ImageNotFoundError(message, code)
+  }
+}
+
 class ImageInvalidFormatError extends Error {
   message
   code
 
-  constructor(message, fields, code) {
+  constructor(message, code) {
     super(message)
     this.message = message
     this.code = code
@@ -32,5 +47,6 @@ class ImageInvalidFormatError extends Error {
 
 module.exports = {
   ImageFieldsError,
-  ImageInvalidFormatError
+  ImageInvalidFormatError,
+  ImageNotFoundError
 }
