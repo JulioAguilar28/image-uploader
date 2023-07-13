@@ -2,7 +2,7 @@
 /dist
 .env
 image_uploader_database_development.sqlite
-public/
+public/images/
 
 tsconfig.tsbuildinfo
 image-uploader-database.sqlite
