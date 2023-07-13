@@ -2,6 +2,7 @@ const { Users } = require('../db/models/index.js')
 const { AuthError, NewUserFieldsError } = require('./auth_errors.js')
 const { ValidationError } = require('sequelize')
 const jwt = require('jsonwebtoken')
+const { createUserImageDir, existsImageDir } = require('../images/images_service.js')
 
 const login = async (email, password) => {
   try {
@@ -10,6 +11,9 @@ const login = async (email, password) => {
     if (user) {
       const token = jwt.sign({ id: user.id }, process.env.TOKEN_KEY)
       user.token = token
+
+      const exists = await existsImageDir(user.id)
+      if (!exists) await createUserImageDir(user.id)
 
       return user
     }
@@ -23,12 +27,16 @@ const login = async (email, password) => {
 
 const signup = async ({ firstName, lastName, email, password }) => {
   try {
-    return await Users.create({
+    const newUser = await Users.create({
       firstName,
       lastName,
       email,
       password
     })
+
+    await createUserImageDir(newUser.id)
+
+    return newUser
   } catch (error) {
     console.error(`AuthService sigup() | ${error}`)
 

@@ -15,6 +15,22 @@ class ImageFieldsError extends Error {
   }
 }
 
+class ImageInvalidFormatError extends Error {
+  message
+  code
+
+  constructor(message, fields, code) {
+    super(message)
+    this.message = message
+    this.code = code
+  }
+
+  static of(message, code = 422) {
+    return new ImageInvalidFormatError(message, code)
+  }
+}
+
 module.exports = {
-  ImageFieldsError
+  ImageFieldsError,
+  ImageInvalidFormatError
 }

@@ -1,6 +1,25 @@
 const { Images } = require('../db/models/index')
 const { ValidationError } = require('sequelize')
-const { ImageFieldsError } = require('./images_errors')
+const { ImageFieldsError, ImageInvalidFormatError } = require('./images_errors')
+const fs = require('fs/promises')
+const path = require('path')
+
+const existsImageDir = async (userId) => {
+  try {
+    await fs.access(path.resolve(`public/images/${userId}`))
+    return true
+  } catch (error) {
+    return false
+  }
+}
+
+const createUserImageDir = async (userId) => {
+  try {
+    return await fs.mkdir(path.resolve(`public/images/${userId}`))
+  } catch (error) {
+    console.error(`createUserDir() | ${error}`)
+  }
+}
 
 const getImagesByUserId = async (userId) => {
   try {
@@ -13,10 +32,17 @@ const getImagesByUserId = async (userId) => {
   }
 }
 
-const createImage = async (imagesParams, userId) => {
+const createImage = async (imageFile, userId) => {
   try {
+    if (!imageFile) throw ImageInvalidFormatError.of('Invalid image format', 422)
+
+    const { filename, mimetype } = imageFile
+    const name = filename.split('.').at(0)
+    const extension = mimetype.split('/').at(1)
+
     return await Images.create({
-      ...imagesParams,
+      name,
+      extension,
       userId
     })
   } catch (error) {
@@ -31,5 +57,7 @@ const createImage = async (imagesParams, userId) => {
 
 module.exports = {
   createImage,
-  getImagesByUserId
+  getImagesByUserId,
+  existsImageDir,
+  createUserImageDir
 }
