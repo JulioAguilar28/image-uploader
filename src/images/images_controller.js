@@ -31,7 +31,7 @@ const getAll = async (req, res) => {
     const images = await ImagesService.getImagesByUserId(req.currentUser)
     ImageView.allImagesView(res, images)
   } catch (error) {
-    res.json(error)
+    ImageView.errorView(res, error)
   }
 }
 
@@ -40,7 +40,7 @@ const get = async (req, res) => {
     const image = await ImagesService.getImageById(req.params.id)
     ImageView.get(res, image)
   } catch (error) {
-    res.json(error)
+    ImageView.errorView(res, error)
   }
 }
 
@@ -58,9 +58,19 @@ const create = async (req, res) => {
   }
 }
 
+const deleteImage = async (req, res) => {
+  try {
+    await ImagesService.deleteImage(req.params.id, req.currentUser)
+    ImageView.successView(res, 'Image deleted successfully')
+  } catch (error) {
+    ImageView.errorView(res, error)
+  }
+}
+
 module.exports = {
   create,
   getAll,
   upload,
-  get
+  get,
+  delete: deleteImage
 }

@@ -21,6 +21,20 @@ const createUserImageDir = async (userId) => {
   }
 }
 
+const removeImageFromDisk = async (filename, userId) => {
+  try {
+    const imageToRemovePath = path.resolve(`public/images/${userId}/${filename}`)
+    await fs.rm(imageToRemovePath)
+  } catch (error) {
+    console.error(`ImagesService removeImageFromDisk() | ${error}`)
+  }
+}
+
+const getImageByIdRequest = async (id) =>
+  await Images.findOne({
+    where: { id }
+  })
+
 const getImagesByUserId = async (userId) => {
   try {
     return await Images.findAll({
@@ -34,9 +48,7 @@ const getImagesByUserId = async (userId) => {
 
 const getImageById = async (id) => {
   try {
-    return await Images.findOne({
-      where: { id }
-    })
+    return getImageByIdRequest(id)
   } catch (error) {
     console.error(`Images Services getImageById() | ${error}`)
 
@@ -67,10 +79,24 @@ const createImage = async (imageFile, userId) => {
   }
 }
 
+const deleteImage = async (id, userId) => {
+  try {
+    const image = await getImageByIdRequest(id)
+
+    await removeImageFromDisk(`${image.name}.${image.extension}`, userId)
+    await image.destroy()
+  } catch (error) {
+    console.error(`Images Service deleteImage() | ${error}`)
+
+    throw error
+  }
+}
+
 module.exports = {
   createImage,
   getImageById,
   getImagesByUserId,
   existsImageDir,
-  createUserImageDir
+  createUserImageDir,
+  deleteImage
 }
