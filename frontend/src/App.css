@@ -4,3 +4,49 @@
   padding: 2rem;
   text-align: center; */
 }
+
+.dotted_container {
+  background-image: repeating-linear-gradient(
+      1deg,
+      #97bef4,
+      #97bef4 17px,
+      transparent 17px,
+      transparent 28px,
+      #97bef4 28px
+    ),
+    repeating-linear-gradient(
+      91deg,
+      #97bef4,
+      #97bef4 17px,
+      transparent 17px,
+      transparent 28px,
+      #97bef4 28px
+    ),
+    repeating-linear-gradient(
+      181deg,
+      #97bef4,
+      #97bef4 17px,
+      transparent 17px,
+      transparent 28px,
+      #97bef4 28px
+    ),
+    repeating-linear-gradient(
+      271deg,
+      #97bef4,
+      #97bef4 17px,
+      transparent 17px,
+      transparent 28px,
+      #97bef4 28px
+    );
+  background-size:
+    2px 100%,
+    100% 2px,
+    2px 100%,
+    100% 2px;
+  background-position:
+    0 0,
+    0 0,
+    100% 0,
+    0 100%;
+  background-repeat: no-repeat;
+}
