@@ -1,7 +1,7 @@
 import './App.css'
 
 function App() {
-  return <main>Image uploader</main>
+  return <main className="">Image uploader</main>
 }
 
 export default App
