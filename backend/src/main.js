@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const path = require('path')
+const cors = require('cors')
 
 const AuthRouter = require('./auth/auth_router')
 const ImagesRouter = require('./images/images_router')
@@ -13,6 +14,7 @@ const staticPath = path.join(__dirname, '../dist')
 app.use(express.static(staticPath))
 
 // Middlewares
+app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
