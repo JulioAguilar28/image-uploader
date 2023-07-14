@@ -1,8 +1,8 @@
-/node_modules
+*/node_modules
 /dist
-.env
+*/.env
 image_uploader_database_development.sqlite
-public/images/
+backend/public/images/
 
 tsconfig.tsbuildinfo
 image-uploader-database.sqlite
