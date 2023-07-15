@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import DragAndDropArea from './DragAndDropArea'
-import ButtonView from './ButtonView'
+import ButtonView from './views/ButtonView'
 
 function UploaderController() {
   const inputFile = useRef<HTMLInputElement>(null)
