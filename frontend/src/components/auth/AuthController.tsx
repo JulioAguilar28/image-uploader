@@ -1,7 +1,11 @@
-import LoginFormView, { UserCredentials } from './LoginFormView'
-import SignupView, { NewUserCredentials } from './SignupView'
+import LoginFormView from './LoginFormView'
+import SignupView from './SignupView'
+import { AuthMode, NewUserCredentials, UserCredentials } from '../../models/appModels'
+import useAccessor from '../../hooks/useAccessor'
 
 function AuthController() {
+  const { auth } = useAccessor()
+
   const handleSignup = (credentials: NewUserCredentials) => {
     console.log(credentials)
   }
@@ -10,10 +14,17 @@ function AuthController() {
     console.log(credentials)
   }
 
+  const handleChangeForm = (mode: AuthMode) => {
+    console.log(mode)
+  }
+
   return (
     <div className="w-full h-full flex flex-col items-center gap-y-4">
-      {/* <LoginFormView /> */}
-      <SignupView onSubmit={handleSignup} />
+      {auth.authMode === AuthMode.Login ? (
+        <LoginFormView onSubmit={handleLogin} onChangeForm={handleChangeForm} />
+      ) : (
+        <SignupView onSubmit={handleSignup} onChangeForm={handleChangeForm} />
+      )}
     </div>
   )
 }

@@ -2,17 +2,14 @@ import React from 'react'
 import InputView from '../views/InputView'
 import ButtonView from '../views/ButtonView'
 import useForm from '../../hooks/useForm'
-
-export type UserCredentials = {
-  email: string
-  password: string
-}
+import { UserCredentials, AuthMode } from '../../models/appModels'
 
 interface Props {
   onSubmit?: (credentials: UserCredentials) => void
+  onChangeForm?: (authMode: AuthMode) => void
 }
 
-function LoginFormView({ onSubmit }: Props) {
+function LoginFormView({ onSubmit, onChangeForm }: Props) {
   const {
     email,
     password,
@@ -26,6 +23,10 @@ function LoginFormView({ onSubmit }: Props) {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (onSubmit && isValidLoginData) onSubmit({ email, password })
+  }
+
+  const handleChangeForm = () => {
+    if (onChangeForm) onChangeForm(AuthMode.Signup)
   }
 
   return (
@@ -52,6 +53,12 @@ function LoginFormView({ onSubmit }: Props) {
           errorLabel="Please introduce a valid password"
           onChange={handleChangePassword}
         />
+        <span className="w-full text-sm text-gray-500 mt-4">
+          You dont have an account.{' '}
+          <span className="cursor-pointer hover:underline" onClick={handleChangeForm}>
+            Create one
+          </span>
+        </span>
         <ButtonView disabled={!isValidLoginData}>Enter</ButtonView>
       </form>
     </>
