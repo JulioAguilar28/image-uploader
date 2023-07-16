@@ -1,7 +1,9 @@
 const { parseErrorField } = require('../utils/parse_errors')
 
 const loginView = (res, user) => {
-  res.status(200).json(getUserREsponse(user))
+  res.status(200).json({
+    user: getUserResponse(user)
+  })
 }
 
 const authErrorView = (res, error) => {
