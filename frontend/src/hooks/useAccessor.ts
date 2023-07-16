@@ -1,5 +1,6 @@
 import { useContext } from 'react'
-import { AuthContext, IAuthContext } from '../context/authContext'
+import { AuthContext, AuthDispatchContext } from '../context/auth/authContext'
+import { AuthAction, AuthState } from '../context/auth/authReducer'
 
 /**
  * Use this hook to retrieve information about
@@ -9,11 +10,13 @@ import { AuthContext, IAuthContext } from '../context/authContext'
  * provide just one hook with all of them.
  */
 export interface AccessorInterface {
-  auth: IAuthContext
+  auth: AuthState
+  authDispatch: React.Dispatch<AuthAction>
 }
 
-export default function useAccessor() {
+export default function useAccessor(): AccessorInterface {
   const auth = useContext(AuthContext)
+  const authDispatch = useContext(AuthDispatchContext)
 
-  return { auth }
+  return { auth, authDispatch }
 }

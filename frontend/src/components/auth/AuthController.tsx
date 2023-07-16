@@ -2,9 +2,10 @@ import LoginFormView from './LoginFormView'
 import SignupView from './SignupView'
 import { AuthMode, NewUserCredentials, UserCredentials } from '../../models/appModels'
 import useAccessor from '../../hooks/useAccessor'
+import * as AuthActions from '../../context/auth/authActions'
 
 function AuthController() {
-  const { auth } = useAccessor()
+  const { auth, authDispatch } = useAccessor()
 
   const handleSignup = (credentials: NewUserCredentials) => {
     console.log(credentials)
@@ -15,7 +16,7 @@ function AuthController() {
   }
 
   const handleChangeForm = (mode: AuthMode) => {
-    console.log(mode)
+    authDispatch(AuthActions.setAuthMode(mode))
   }
 
   return (
