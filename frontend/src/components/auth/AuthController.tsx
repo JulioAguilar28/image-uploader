@@ -13,7 +13,7 @@ function AuthController() {
   }
 
   const handleLogin = (credentials: UserCredentials) => {
-    console.log(credentials)
+    void AuthService.login(credentials, authDispatch)
   }
 
   const handleChangeForm = (mode: AuthMode) => {
