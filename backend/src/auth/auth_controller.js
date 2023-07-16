@@ -18,6 +18,7 @@ const login = async (req, res) => {
 const signup = async (req, res) => {
   try {
     const user = await AuthService.signup(req.body)
+    console.log(user)
     AuthView.signupView(res, user)
   } catch (error) {
     if (error instanceof NewUserFieldsError) return AuthView.signupErrorView(res, error)

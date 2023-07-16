@@ -9,8 +9,7 @@ const login = async (email, password) => {
     const user = await Users.login(email, password)
 
     if (user) {
-      const token = jwt.sign({ id: user.id }, process.env.TOKEN_KEY)
-      user.token = token
+      await signUserToken(user)
 
       const exists = await existsImageDir(user.id)
       if (!exists) await createUserImageDir(user.id)
@@ -34,6 +33,7 @@ const signup = async ({ firstName, lastName, email, password }) => {
       password
     })
 
+    await signUserToken(newUser)
     await createUserImageDir(newUser.id)
 
     return newUser
@@ -45,6 +45,13 @@ const signup = async ({ firstName, lastName, email, password }) => {
 
     throw error
   }
+}
+
+const signUserToken = async (user) => {
+  const token = jwt.sign({ id: user.id }, process.env.TOKEN_KEY)
+  user.token = token
+
+  return user
 }
 
 module.exports = {
