@@ -3,12 +3,13 @@ import SignupView from './SignupView'
 import { AuthMode, NewUserCredentials, UserCredentials } from '../../models/appModels'
 import useAccessor from '../../hooks/useAccessor'
 import * as AuthActions from '../../context/auth/authActions'
+import * as AuthService from '../../services/AuthService'
 
 function AuthController() {
   const { auth, authDispatch } = useAccessor()
 
   const handleSignup = (credentials: NewUserCredentials) => {
-    console.log(credentials)
+    void AuthService.signup(credentials, authDispatch)
   }
 
   const handleLogin = (credentials: UserCredentials) => {
