@@ -13,6 +13,32 @@ export class AuthError extends Error {
   }
 }
 
+export class ServerError extends Error {
+  public _tag: 'ServerError'
+
+  constructor(endpoint: string, message: string) {
+    super(`${endpoint}: ${message}`)
+    this._tag = 'ServerError'
+  }
+
+  public static of(endpoint: string, message: string) {
+    return new ServerError(endpoint, message)
+  }
+}
+
+export class UnexpectedError extends Error {
+  public _tag: 'UnexpectedError'
+
+  constructor(message: string) {
+    super(`${message}`)
+    this._tag = 'UnexpectedError'
+  }
+
+  public static of(message: string) {
+    return new UnexpectedError(message)
+  }
+}
+
 export class AxiosRequestError extends Error {
   public _tag: 'AxiosRequestError'
   public readonly message: string
@@ -45,9 +71,9 @@ export class AxiosRequestError extends Error {
   }
 }
 
-export const parseRequestError = (error: unknown) => {
-  const axiosError = error as AxiosError<{ message: string }>
-  const anyError = error as Error
+export const parseRequestError = (reason: unknown) => {
+  const axiosError = reason as AxiosError<{ message: string }>
+  const anyError = reason as Error
 
   if (axiosError.response) return AxiosRequestError.of(axiosError)
   else return AxiosRequestError.unexpected(anyError.message)

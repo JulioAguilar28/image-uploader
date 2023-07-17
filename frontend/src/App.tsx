@@ -1,23 +1,39 @@
-import Header from './components/Header'
-import UploaderController from './components/UploaderController'
-import AuthController from './components/auth/AuthController'
+import * as O from 'fp-ts/lib/Option'
+import { pipe } from 'fp-ts/lib/function'
+import { useState, useEffect } from 'react'
+import MainController from './components/MainController'
+import * as AuthService from './services/AuthService'
 import useAccessor from './hooks/useAccessor'
+import * as AuthActions from './context/auth/authActions'
 import './App.css'
+import { AuthAction } from './context/auth/authReducer'
+
+const verifyCurrentUser = async (dispatch: React.Dispatch<AuthAction>) => {
+  const currentUser = await pipe(AuthService.getCurrentUser())()
+
+  pipe(
+    currentUser,
+    O.fold(
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      () => {},
+      (user) => {
+        dispatch(AuthActions.setUser(user))
+      }
+    )
+  )
+}
 
 function App() {
-  const { auth } = useAccessor()
+  const [showMainContent, setShowMainContent] = useState<boolean>(false)
+  const { authDispatch } = useAccessor()
 
-  return (
-    <main className="h-screen w-full flex flex-col items-center">
-      {auth.user && <Header />}
+  useEffect(() => {
+    void verifyCurrentUser(authDispatch).then(() => {
+      setShowMainContent(true)
+    })
+  }, [])
 
-      <section className="grow w-full flex flex-col items-center justify-center">
-        <div className="max-h-[520px] w-[400px] px-8 py-9 rounded-xl shadow-xl shadow-slate-300">
-          {auth.user ? <UploaderController /> : <AuthController />}
-        </div>
-      </section>
-    </main>
-  )
+  return <>{showMainContent ? <MainController /> : <div>Loading...</div>}</>
 }
 
 export default App
