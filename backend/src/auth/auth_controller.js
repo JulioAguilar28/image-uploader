@@ -1,6 +1,8 @@
 const AuthService = require('./auth_service.js')
 const AuthView = require('./auth_view.js')
 const { AuthError, NewUserFieldsError } = require('./auth_errors.js')
+const UsersService = require('../users/users_service.js')
+const { UserNotFoundError } = require('../users/users_error.js')
 
 const login = async (req, res) => {
   try {
@@ -26,7 +28,17 @@ const signup = async (req, res) => {
   }
 }
 
+const getCurrentUser = async (req, res) => {
+  try {
+    const user = await UsersService.getUserById(req.currentUser)
+    AuthView.loginView(res, user)
+  } catch (error) {
+    AuthView.authErrorView(res, AuthError.of('Unauthorized: invalid token', 401))
+  }
+}
+
 module.exports = {
   login,
-  signup
+  signup,
+  getCurrentUser
 }
