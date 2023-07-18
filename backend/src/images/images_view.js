@@ -25,6 +25,10 @@ const getImageView = (res, image) => {
   })
 }
 
+const getResourceView = (res, path) => {
+  res.status(200).sendFile(path)
+}
+
 const successView = (res, message) => {
   res.status(200).json({
     message
@@ -50,6 +54,7 @@ module.exports = {
   create: createView,
   get: getImageView,
   allImagesView,
+  getResourceView,
   fieldsError,
   errorView,
   successView

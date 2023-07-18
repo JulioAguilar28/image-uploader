@@ -7,7 +7,7 @@ import { Image } from '../models/appModels'
 import { AxiosResponse } from 'axios'
 import { toast } from 'react-toastify'
 
-export const uploadImage = async (file: File) => {
+export const uploadImage = async (file: File, onsuccess?: (image: Image) => void) => {
   const formData = new FormData()
   formData.append('image', file)
 
@@ -24,7 +24,7 @@ export const uploadImage = async (file: File) => {
         toast.error(errorMessage)
       },
       (response) => {
-        console.log(response)
+        if (onsuccess) onsuccess(response.data.image)
         toast.success('Your image was uploaded correctly')
       }
     )
@@ -38,6 +38,40 @@ const uploadImageRequest = (formData: FormData) =>
         headers: {
           'Content-Type': 'multipart/form-data'
         }
+      }),
+    (reason) => parseRequestError(reason)
+  )
+
+export const getImageResource = async (
+  imgId: string,
+  userId: number,
+  onsuccess?: (img: string) => void
+) => {
+  const operation = getImageResourceRequest(imgId, userId)
+  const result = await operation()
+
+  pipe(
+    result,
+    E.foldW(
+      (error) => {
+        console.error(error)
+        toast.error('There was a problem uploading the image')
+      },
+      (response) => {
+        const blob = new Blob([response.data])
+        const img = URL.createObjectURL(blob)
+
+        if (onsuccess) onsuccess(img)
+      }
+    )
+  )
+}
+
+const getImageResourceRequest = (imgId: string, userId: number) =>
+  TE.tryCatch(
+    () =>
+      ApiService.of().get(`/images/${userId}/${imgId}`, {
+        responseType: 'blob'
       }),
     (reason) => parseRequestError(reason)
   )

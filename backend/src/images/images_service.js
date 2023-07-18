@@ -65,6 +65,19 @@ const getImageById = async (id) => {
   }
 }
 
+const getResourceImagePath = async (imageId, userId) => {
+  try {
+    const image = await getImageByIdRequest(imageId)
+    const imageName = `${image.name}.${image.extension}`
+    const pathToResource = path.join(path.resolve(), `public/images/${userId}/${imageName}`)
+    return pathToResource
+  } catch (error) {
+    console.error(`Images Services getResourceImagePath() | ${error}`)
+
+    throw error
+  }
+}
+
 const createImage = async (imageFile, userId) => {
   try {
     if (!imageFile) throw ImageInvalidFormatError.of('Invalid image format', 422)
@@ -104,6 +117,7 @@ module.exports = {
   createImage,
   getImageById,
   getImagesByUserId,
+  getResourceImagePath,
   existsImageDir,
   createUserImageDir,
   deleteImage

@@ -44,6 +44,16 @@ const get = async (req, res) => {
   }
 }
 
+const getResourceById = async (req, res) => {
+  try {
+    const { userId, id } = req.params
+    const resourcePath = await ImagesService.getResourceImagePath(id, userId)
+    ImageView.getResourceView(res, resourcePath)
+  } catch (error) {
+    ImageView.errorView(res, error)
+  }
+}
+
 const create = async (req, res) => {
   try {
     const image = await ImagesService.createImage(req.file, req.currentUser)
@@ -69,6 +79,7 @@ const deleteImage = async (req, res) => {
 
 module.exports = {
   create,
+  getResourceById,
   getAll,
   upload,
   get,
