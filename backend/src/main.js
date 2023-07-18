@@ -22,7 +22,8 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/api/v1', AuthRouter)
 app.use('/api/v1/images', ImagesRouter)
 
-app.use('/*', (req, res) => {
+// Serve the frontend application
+app.use('/#/*', (req, res) => {
   res.sendFile(path.join(staticPath, 'index.html'))
 })
 
