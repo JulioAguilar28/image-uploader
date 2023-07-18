@@ -5,6 +5,7 @@ import { ApiService } from './ApiService'
 import { AxiosRequestError, parseRequestError } from './ApiErrors'
 import { Image } from '../models/appModels'
 import { AxiosResponse } from 'axios'
+import { toast } from 'react-toastify'
 
 export const uploadImage = async (file: File) => {
   const formData = new FormData()
@@ -18,9 +19,13 @@ export const uploadImage = async (file: File) => {
     E.fold(
       (error) => {
         console.error(error)
+        const errorMessage =
+          error.code === 422 ? 'We could not upload the image, try again' : error.message
+        toast.error(errorMessage)
       },
       (response) => {
         console.log(response)
+        toast.success('Your image was uploaded correctly')
       }
     )
   )
