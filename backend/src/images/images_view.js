@@ -1,7 +1,9 @@
 const { parseErrorField } = require('../utils/parse_errors')
 
 const createView = (res, image) => {
-  res.status(200).json(parseImageResponse(image))
+  res.status(200).json({
+    image: parseImageResponse(image)
+  })
 }
 
 const parseImageResponse = (image) => ({
