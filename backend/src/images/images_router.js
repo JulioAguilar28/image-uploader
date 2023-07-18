@@ -5,13 +5,16 @@ const ImagesController = require('./images_controller')
 const AuthMiddleware = require('../middlewares/is_logged_in')
 const path = require('path')
 
-imagesRouter.use(AuthMiddleware)
+imagesRouter.use(AuthMiddleware, (req, _res, next) => {
+  /**
+   * This way we provide only the current user folder statically
+   * avoiding the other users to access all images
+   */
+  const imagesStaticPath = path.join(path.resolve(), `public/images/${req.currentUser}`)
+  imagesRouter.use('/static', express.static(imagesStaticPath))
 
-// uploades images files
-// TODO: Find a way to provide only images for the current user
-// for now, we provide all uploaded images
-const imagesStaticPath = path.join(path.resolve(), 'public/images/')
-imagesRouter.use('/static', express.static(imagesStaticPath))
+  next()
+})
 
 imagesRouter
   .route('')
