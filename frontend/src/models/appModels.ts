@@ -16,6 +16,12 @@ export interface User {
   token: string
 }
 
+export interface Image {
+  id: number
+  name: string
+  extension: string
+}
+
 export enum AuthMode {
   Login = 0,
   Signup = 1
