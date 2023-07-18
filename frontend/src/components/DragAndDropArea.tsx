@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 import UploadIcon from './icons/upload_logo'
 import { getFileType } from '../utils/files'
+import useToast from '../hooks/useToast'
 
 interface Props {
   onSelectedFile: (file: File) => void
@@ -10,6 +11,7 @@ interface Props {
 function DragAndDropArea({ onSelectedFile, acceptedFiles }: Props) {
   const dropZone = useRef<HTMLDivElement>(null)
   const inputFile = useRef<HTMLInputElement>(null)
+  const { showErrorToast } = useToast()
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
@@ -18,7 +20,7 @@ function DragAndDropArea({ onSelectedFile, acceptedFiles }: Props) {
 
     if (!acceptedFiles?.includes(fileType)) {
       inputFile.current!.value = ''
-      console.log('You must provide a valid image file')
+      showErrorToast('You must provide a valid image file')
       return
     }
 

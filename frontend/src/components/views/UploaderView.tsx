@@ -1,7 +1,6 @@
 import { useRef } from 'react'
 import DragAndDropArea from '../DragAndDropArea'
 import ButtonView from './ButtonView'
-import { getFileType } from '../../utils/files'
 
 interface Props {
   onSelectedFile: (file: File) => void

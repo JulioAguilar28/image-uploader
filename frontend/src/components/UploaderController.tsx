@@ -2,11 +2,13 @@ import { useState, useMemo } from 'react'
 import PreviewImageView from './views/PreviewImageView'
 import UploaderView from './views/UploaderView'
 import * as ImagesService from '../services/ImagesService'
-import { parseAcceptedExtensionFiles, getFileType } from '../utils/files'
+import { parseAcceptedExtensionFiles } from '../utils/files'
+import useToast from '../hooks/useToast'
 
 function UploaderController() {
   const [uploadedImage, setUploadedImage] = useState<string>('')
   const [uploadedFile, setUploadedFile] = useState<File>()
+  const { showSuccessToast } = useToast()
 
   const showImagePreview = useMemo(() => {
     return uploadedFile && uploadedImage
@@ -18,9 +20,10 @@ function UploaderController() {
   const handleSelectedFile = (file: File) => {
     const fileReader = new FileReader()
     fileReader.readAsDataURL(file)
-    fileReader.addEventListener('load', function () {
+    fileReader.addEventListener('load', function() {
       setUploadedImage(this.result as string)
       setUploadedFile(file)
+      showSuccessToast('Showing the preview')
     })
   }
 
@@ -29,7 +32,7 @@ function UploaderController() {
   }
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center w-full">
       {showImagePreview ? (
         <PreviewImageView
           image={uploadedImage}

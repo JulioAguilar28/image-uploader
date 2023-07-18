@@ -5,8 +5,10 @@ import MainController from './components/MainController'
 import * as AuthService from './services/AuthService'
 import useAccessor from './hooks/useAccessor'
 import * as AuthActions from './context/auth/authActions'
-import './App.css'
 import { AuthAction } from './context/auth/authReducer'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import './App.css'
 
 const verifyCurrentUser = async (dispatch: React.Dispatch<AuthAction>) => {
   const currentUser = await pipe(AuthService.getCurrentUser())()
@@ -15,9 +17,10 @@ const verifyCurrentUser = async (dispatch: React.Dispatch<AuthAction>) => {
     currentUser,
     O.fold(
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      () => {},
+      () => { },
       (user) => {
         dispatch(AuthActions.setUser(user))
+        toast.success(`Welcome back ${user.firstName}`)
       }
     )
   )
@@ -33,7 +36,27 @@ function App() {
     })
   }, [])
 
-  return <>{showMainContent ? <MainController /> : <div>Loading...</div>}</>
+  return (
+    <>
+      {showMainContent && (
+        <>
+          <MainController />
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover={false}
+            theme="light"
+          />
+        </>
+      )}
+    </>
+  )
 }
 
 export default App

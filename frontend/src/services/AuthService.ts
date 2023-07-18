@@ -17,6 +17,7 @@ import { AuthAction } from '../context/auth/authReducer'
 import * as AuthActions from '../context/auth/authActions'
 import { AxiosResponse } from 'axios'
 import { getToken, setToken } from './StorageService'
+import { toast } from 'react-toastify'
 
 export const getCurrentUser = () =>
   pipe(
@@ -62,6 +63,9 @@ export const signup = async (
     E.fold(
       (error) => {
         console.error(error)
+        const errorMessage =
+          error.code === 422 ? 'The provided fields are not correct' : error.message
+        toast.error(errorMessage)
       },
       (response) => {
         const token = response.data.user.token
@@ -69,6 +73,7 @@ export const signup = async (
         dispatch(AuthActions.setUser(response.data.user))
         authenticateService(token)
         setToken(token)
+        toast.success(`Welcome ${response.data.user.firstName}`)
       }
     )
   )
@@ -92,6 +97,9 @@ export const login = async (
     E.fold(
       (error) => {
         console.error(error)
+        const errorMessage =
+          error.code === 422 ? 'The email or password are not correct' : error.message
+        toast.error(errorMessage)
       },
       (response) => {
         const token = response.data.user.token
@@ -99,6 +107,7 @@ export const login = async (
         dispatch(AuthActions.setUser(response.data.user))
         authenticateService(token)
         setToken(token)
+        toast.success(`Welcome back ${response.data.user.firstName}`)
       }
     )
   )
